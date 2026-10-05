@@ -1,0 +1,41 @@
+name: Build C++ Project
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            arch: linux-x86-64
+
+          - os: macos-14
+            arch: macos-arm64
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Configure CMake
+        run: cmake -S src_example -B build
+
+      - name: Build
+        run: cmake --build build --config Release
+
+      - name: Show binary architecture
+        run: file build/hello_world
+
+      - name: Test
+        run: ./build/hello_world
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: hello-world-${{ matrix.arch }}
+          path: build/hello_world
