@@ -1,12 +1,11 @@
-# CMakeLists.txt
-
 cmake_minimum_required(VERSION 3.10)
-project(HelloWorldX86 CXX)
 
-# Añade el ejecutable, indicando que las fuentes están en la carpeta src
-add_executable(hello_world_x86 main_example_x86.cpp)
+project(HelloWorld CXX)
 
-# 1. Indicamos al enlazador que use versiones estáticas de las librerías estándar
-target_link_options(hello_world_x86 PRIVATE
-    -static
-)
+# Genera el ejecutable a partir del código fuente
+add_executable(hello_world main.cpp)
+
+# En Linux generamos un ejecutable estático
+if(UNIX AND NOT APPLE)
+    target_link_options(hello_world PRIVATE -static)
+endif()
